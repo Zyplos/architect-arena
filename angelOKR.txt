@@ -1,0 +1,2 @@
+A Player model -- by end of Monday (estimate: 1hr)
+Simple drag and drop system -- by end of Tuesday (estimate: 4hr)
