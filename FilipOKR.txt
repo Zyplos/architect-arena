@@ -1,1 +1,1 @@
-Implement a very simple prototype, button that moves maze piece around level---by end of Monday (estimate: 1.5hr)
+Implement a very simple prototype, button that moves maze piece around level -- by end of Monday (estimate: 1.5hr)
