@@ -8,13 +8,13 @@ public class ButtonLeftRight : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKey(KeyCode.Mouse0))
         {
-            mazepiece.transform.Translate(.1f, 0f, 0f);
+            mazepiece.transform.Translate(.005f, 0f, 0f);
         }
-        if (Input.GetMouseButtonDown(1))
-        {
-            mazepiece.transform.Translate(-.1f, 0f, 0f);
+        if (Input.GetKey(KeyCode.Mouse1))
+        { 
+            mazepiece.transform.Translate(-.005f, 0f, 0f);
         }
     }
 }
