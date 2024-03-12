@@ -6,21 +6,15 @@ public class ButtonUpDown: MonoBehaviour
 {
     public GameObject mazepiece;
 
-
-    //    private void OnMouseUpAsButton()
-    //{
-    //mazepiece.transform.position += new Vector3(0, 20, 0);
-    //    mazepiece.transform.Translate(0f, .1f, 0f);
-    // }
     private void OnMouseOver()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKey(KeyCode.Mouse0))
         {
-            mazepiece.transform.Translate(0f, .1f, 0f);
+            mazepiece.transform.Translate(0f, .005f, 0f);
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetKey(KeyCode.Mouse1))
         {
-            mazepiece.transform.Translate(0f, -.1f, 0f);
+            mazepiece.transform.Translate(0f, -.005f, 0f);
         }
     }
 }
