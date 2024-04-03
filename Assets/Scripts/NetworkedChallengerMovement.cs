@@ -35,6 +35,9 @@ public class NetworkedChallengerMovement : NetworkBehaviour
     // reference to the camera
     [SerializeField] private Camera playerCamera;
 
+    public Vector3 architectSpawnLocation;
+    public Vector3 architectSpawnRotation;
+
 
     // Start is called before the first frame update
     void Start()
@@ -108,6 +111,16 @@ public class NetworkedChallengerMovement : NetworkBehaviour
 
         // disable "Lobby Camera" in scene
         GameObject.Find("Lobby Camera").SetActive(false);
+
+        // Architect hack code only for owner id 1
+        if (OwnerClientId != 0) return;
+
+        // disable gravity
+        GetComponent<Rigidbody>().useGravity = false;
+
+        // copy position and rotation of the lobby camera to the player camera
+        transform.position = architectSpawnLocation;
+        transform.rotation = Quaternion.Euler(architectSpawnRotation);
     }
 
     // // need to add the [ServerRPC] attribute

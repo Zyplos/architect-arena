@@ -177,16 +177,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c4eda0499518164f8910c908f4755a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 25
-  rotationSpeed: 90
-  force: 10
-  audioListener: {fileID: 7083426999007185914}
-  playerCamera: {fileID: 3763922632111916125}
+  walkingSpeed: 10
+  runningSpeed: 20
+  jumpSpeed: 8
+  gravity: 20
+  lookSpeed: 2
+  lookXLimit: 45
+  canMove: 1
   colors:
   - {r: 1, g: 0.24313726, b: 0.24313726, a: 1}
   - {r: 1, g: 0.827451, b: 0, a: 1}
   - {r: 0.056737266, g: 0.8018868, b: 0.21842068, a: 1}
   - {r: 0.21787111, g: 0.31446096, b: 0.9056604, a: 1}
+  audioListener: {fileID: 7083426999007185914}
+  playerCamera: {fileID: 3763922632111916125}
+  architectSpawnLocation: {x: 144.6, y: 118.5, z: -163.4}
+  architectSpawnRotation: {x: 22.802, y: -40.389, z: 0}
 --- !u!114 &7908552210010139764
 MonoBehaviour:
   m_ObjectHideFlags: 0
