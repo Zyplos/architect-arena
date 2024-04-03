@@ -46,8 +46,11 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         playerCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
         playerCamera.transform.SetParent(transform);
 
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
+        // do this for all players except the architect
+        if (OwnerClientId != 0) {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
     // Update is called once per frame
     void Update()
@@ -81,6 +84,10 @@ public class NetworkedChallengerMovement : NetworkBehaviour
 
         transform.position += moveDirection * Time.deltaTime;
 
+
+        // don't rotate if the player is the architect
+        if (OwnerClientId == 0) return;
+
         if (playerCamera != null)
         {
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
@@ -108,6 +115,9 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         // enable the camera and the audio listener
         audioListener.enabled = true;
         playerCamera.enabled = true;
+
+        // tag playerCamera with "MainCamera"
+        playerCamera.tag = "MainCamera";
 
         // disable "Lobby Camera" in scene
         GameObject.Find("Lobby Camera").SetActive(false);
