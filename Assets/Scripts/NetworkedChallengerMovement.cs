@@ -8,7 +8,16 @@ using Unity.Netcode;
 // extension of MonoBehaviour that has functions related to multiplayer
 public class NetworkedChallengerMovement : NetworkBehaviour
 {
-    public float speed = 2f;
+    public float walkingSpeed = 10.0f;
+    public float runningSpeed = 20.0f;
+    public float jumpSpeed = 8.0f;
+    public float gravity = 20.0f;
+    public float lookSpeed = 2.0f;
+    public float lookXLimit = 45.0f;
+    Vector3 moveDirection = Vector3.zero;
+    float rotationX = 0;
+
+    public bool canMove = true;
     // create a list of colors
     public List<Color> colors = new List<Color>();
 
@@ -30,7 +39,12 @@ public class NetworkedChallengerMovement : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        playerCamera = Camera.main;
+        playerCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+        playerCamera.transform.SetParent(transform);
 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
     // Update is called once per frame
     void Update()
@@ -40,59 +54,48 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         // not on the other prefabs 
         if (!IsOwner) return;
 
-        Vector3 moveDirection = new Vector3(0, 0, 0);
+        bool isRunning = false;
 
-        if (Input.GetKey(KeyCode.W))
+        // Left Shift to run
+        isRunning = Input.GetKey(KeyCode.LeftShift);
+
+        Vector3 forward = transform.TransformDirection(Vector3.forward);
+        Vector3 right = transform.TransformDirection(Vector3.right);
+
+        float curSpeedX = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Vertical") : 0;
+        float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
+        float movementDirectionY = 0f;
+        moveDirection = (forward * curSpeedX) + (right * curSpeedY);
+ 
+        if (Input.GetButton("Jump") && canMove)
         {
-            moveDirection.z = +1f;
+            moveDirection.y = jumpSpeed;
         }
-        if (Input.GetKey(KeyCode.S))
+        else
         {
-            moveDirection.z = -1f;
+            moveDirection.y = movementDirectionY;
         }
-        if (Input.GetKey(KeyCode.A))
+
+        transform.position += moveDirection * Time.deltaTime;
+
+        if (playerCamera != null)
         {
-            moveDirection.x = -1f;
+            rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
+            rotationX = Mathf.Clamp(rotationX, -lookXLimit, lookXLimit);
+            playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
+            transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
-        if (Input.GetKey(KeyCode.D))
-        {
-            moveDirection.x = +1f;
-        }
-        transform.position += moveDirection * speed * Time.deltaTime;
-
-
-        // if I is pressed spawn the object 
-        // if J is pressed destroy the object
-        // if (Input.GetKeyDown(KeyCode.I))
-        // {
-        //     //instantiate the object
-        //     instantiatedPrefab = Instantiate(spawnedPrefab);
-        //     // spawn it on the scene
-        //     instantiatedPrefab.GetComponent<NetworkObject>().Spawn(true);
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.J))
-        // {
-        //     //despawn the object
-        //     instantiatedPrefab.GetComponent<NetworkObject>().Despawn(true);
-        //     // destroy the object
-        //     Destroy(instantiatedPrefab);
-        // }
-
-        // if (Input.GetButtonDown("Fire1"))
-        // {
-        //     // call the BulletSpawningServerRpc method
-        //     // as client can not spawn objects
-        //     BulletSpawningServerRpc(cannon.transform.position, cannon.transform.rotation);
-        // }
     }
 
     // this method is called when the object is spawned
     // we will change the color of the objects
     public override void OnNetworkSpawn()
     {
-        Debug.Log("SPAWNING PLAYER");
+        Debug.Log("SPAWNING PLAYER | " + OwnerClientId);
         GetComponent<MeshRenderer>().material.color = colors[(int)OwnerClientId];
+
+        // move player up by 2
+        transform.position = new Vector3(transform.position.x, transform.position.y + 2, transform.position.z);
 
         // check if the player is the owner of the object
         if (!IsOwner) return;
