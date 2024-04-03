@@ -4,16 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
-<<<<<<< HEAD
   - Door
-=======
   - KillVoid
->>>>>>> c99ecb16e9e1379b55ffaf6117878320f7102137
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Rat
   - Water
   - UI
   - 
