@@ -4,6 +4,8 @@ public class FaceHighlighter : MonoBehaviour
 {
     private BoxCollider boxCollider;
 
+    public int delta = 40;
+
     void Start()
     {
         // Assuming the BoxCollider is attached to the same GameObject as this script
@@ -47,22 +49,22 @@ public class FaceHighlighter : MonoBehaviour
             switch (direction)
             {
                 case "x+":
-                    position.x += 1;
+                    position.x += delta;
                     break;
                 case "x-":
-                    position.x -= 1;
+                    position.x -= delta;
                     break;
                 case "y+":
-                    position.y += 1;
+                    position.y += delta;
                     break;
                 case "y-":
-                    position.y -= 1;
+                    position.y -= delta;
                     break;
                 case "z+":
-                    position.z += 1;
+                    position.z += delta;
                     break;
                 case "z-":
-                    position.z -= 1;
+                    position.z -= delta;
                     break;
             }
 
@@ -71,7 +73,7 @@ public class FaceHighlighter : MonoBehaviour
             {
                 // eventually we'll have a lot of block types, this'll be better than having a lot of class variables
                 // https://docs.unity3d.com/ScriptReference/Resources.html
-                GameObject block = Instantiate(Resources.Load("LevelBlocks/BlockTemplate"), position, Quaternion.identity) as GameObject;
+                GameObject block = Instantiate(Resources.Load("LevelBlocks/LobbyRoomPrefab"), position, Quaternion.identity) as GameObject;
             }
         } else {
             // mouse not over any face, set opacity to 0 for all objects with name "highlight-"
