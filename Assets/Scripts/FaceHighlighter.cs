@@ -73,9 +73,11 @@ public class FaceHighlighter : MonoBehaviour
             {
                 // eventually we'll have a lot of block types, this'll be better than having a lot of class variables
                 // https://docs.unity3d.com/ScriptReference/Resources.html
-                GameObject block = Instantiate(Resources.Load("LevelBlocks/LobbyRoomPrefab"), position, Quaternion.identity) as GameObject;
+                GameObject block = Instantiate(Resources.Load("LevelBlocks/TrapRoomResource"), position, Quaternion.identity) as GameObject;
             }
-        } else {
+        }
+        else
+        {
             // mouse not over any face, set opacity to 0 for all objects with name "highlight-"
             foreach (Transform child in transform)
             {
