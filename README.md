@@ -15,16 +15,15 @@ The following AI constructs and Mecanim animations were implemented for this che
 - (Angel) The Pet in the LobbyRoom uses NavMesh to follow players
 - (Angel) The Pet in the LobbyRoom uses Mecanim animations to show if its chasing or idle
 - (Filip) The Rat in the PuzzleRoom used NavMesh to navigate room and run away from player when it gets close
-- (Filip) The CHaracter model in the PuzzleRoom uses Mecanin animations to IDLE, Run, and Jump
+- (Filip) The Character model in the PuzzleRoom uses Mecanin animations to IDLE, Run, and Jump
 
 The following changes were made including sound and UI designs ( ASGN 7 )
 - Made the join code more readable by adding contrast and a shadow effect to it
 - Repositioned the UI buttons to make it look more sleek and modern
-- Also added color, highlighitng and shadows to buttons and text fields
+- Also added color, highlighting and shadows to buttons and text fields
 - Added menu music
 - Added button sound effects
 - Added ambient sound to puzzle room
 - Added door and fire sound effects to puzzle room
 - Resized puzzle room to fit level template
 - Added more varied pressure pads and doors to puzzle room design
-- 
