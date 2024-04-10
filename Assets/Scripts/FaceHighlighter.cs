@@ -29,41 +29,20 @@ public class FaceHighlighter : NetworkBehaviour
 
     private TMPro.TMP_Text hintText;
 
-    // array of strings with available rooms
-    private string[] rooms = { "TrapRoomResource", "StairwellRoomResource", "AlternatingPlatformRoomResource" };
+    public LobbyManager lobbyManager;
 
-    private Dictionary<string, string> friendlyRoomNames = new Dictionary<string, string>
-    {
-        { "TrapRoomResource", "Lava Room" },
-        { "StairwellRoomResource", "Stairwell Climb" },
-        { "AlternatingPlatformRoomResource", "Shaky Hallway" }
-    };
-
-    private string[] upcomingRooms;
 
     void Start()
     {
         // Assuming the BoxCollider is attached to the same GameObject as this script
         boxCollider = GetComponent<BoxCollider>();
 
+        lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
+
         // get the hint text object from Canvas
         hintText = GameObject.Find("Canvas").transform.Find("LevelBlockHintText").GetComponent<TMPro.TMP_Text>();
 
         isArchitect = OwnerClientId == 0;
-
-        GenerateRandomRoomOrder();
-    }
-
-    private void GenerateRandomRoomOrder()
-    {
-        // randomly add 10 rooms to the upcomingRooms array
-        upcomingRooms = new string[10];
-
-        for (int i = 0; i < 10; i++)
-        {
-            int randomIndex = UnityEngine.Random.Range(0, rooms.Length);
-            upcomingRooms[i] = rooms[randomIndex];
-        }
     }
 
     void Update()
@@ -71,10 +50,28 @@ public class FaceHighlighter : NetworkBehaviour
         if (!isArchitect) return; // Only the architect can place blocks
         if (!Camera.main) return; // If there is no camera, don't do anything (happens when game's launched)
 
-        if (buildingMode && LevelWalls)
+        buildingMode = lobbyManager.isBuilding;
+
+        if (LevelWalls)
         {
             LevelWalls.GetComponent<Renderer>().material.color = new Color(0, 0, 0, 0.2f);
         }
+
+        if (!buildingMode)
+        {
+            hintText.text = "";
+
+            foreach (Transform child in transform)
+            {
+                if (child.name.StartsWith("highlight-"))
+                {
+                    Color otherColor = child.GetComponent<Renderer>().material.color;
+                    otherColor.a = 0;
+                    child.GetComponent<Renderer>().material.color = otherColor;
+                }
+            }
+            return;
+        };
 
         // Cast a ray from the mouse position
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -143,6 +140,7 @@ public class FaceHighlighter : NetworkBehaviour
                 // https://docs.unity3d.com/ScriptReference/Resources.html
                 Debug.Log("UPDATE | GOT CLICK " + direction);
                 SpawnBlockServerRpc(position);
+                lobbyManager.removeFirstRoom();
                 facePlaced[direction] = true;
                 Debug.Log("UPDATE | SPAWNED BLOCK?");
             }
@@ -161,7 +159,7 @@ public class FaceHighlighter : NetworkBehaviour
             }
 
             // hide hint text
-            hintText.text = "";
+            // hintText.text = "";
         }
     }
 
@@ -173,7 +171,7 @@ public class FaceHighlighter : NetworkBehaviour
         // set hint text position to screen position
         hintText.rectTransform.position = screenPos;
 
-        hintText.text = "Placing next:\nTrap Room";
+        hintText.text = "Placing next:\n" + lobbyManager.getUpcomingFriendlyRoomName();
     }
 
     string CalculateDirection(RaycastHit hit)
