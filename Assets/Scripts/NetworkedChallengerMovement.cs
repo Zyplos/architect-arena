@@ -38,14 +38,18 @@ public class NetworkedChallengerMovement : NetworkBehaviour
     public Vector3 architectSpawnLocation;
     public Vector3 architectSpawnRotation;
 
+    private bool isArchitect = false;
+
 
     // Start is called before the first frame update
     void Start()
     {
         playerCamera = Camera.main;
 
-        // do this for all players except the architect
-        if (OwnerClientId != 0)
+
+
+        // everyone but the architect should have their cursor locked
+        if (!isArchitect)
         {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
@@ -84,9 +88,10 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         transform.position += moveDirection * Time.deltaTime;
 
 
-        // don't rotate if the player is the architect
-        if (OwnerClientId == 0) return;
+        // dont continue if the player is the architect
+        if (isArchitect) return;
 
+        // rotate camera controls only for challengers
         if (playerCamera != null)
         {
             rotationX += -Input.GetAxis("Mouse Y") * lookSpeed;
@@ -100,6 +105,8 @@ public class NetworkedChallengerMovement : NetworkBehaviour
     // we will change the color of the objects
     public override void OnNetworkSpawn()
     {
+        isArchitect = OwnerClientId == 0;
+
         Debug.Log("SPAWNING PLAYER | " + OwnerClientId);
         GetComponent<MeshRenderer>().material.color = colors[(int)OwnerClientId];
 
@@ -123,15 +130,17 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         // disable "Lobby Camera" in scene
         GameObject.Find("Lobby Camera").SetActive(false);
 
-        // Architect hack code only for owner id 1
-        if (OwnerClientId != 0) return;
+        // only do the following if the player is the architect
+        if (OwnerClientId == 0)
+        {
+            Debug.Log("SETTING ARCHITECT CAMERA POSITION");
+            // disable gravity
+            GetComponent<Rigidbody>().useGravity = false;
 
-        // disable gravity
-        GetComponent<Rigidbody>().useGravity = false;
-
-        // copy position and rotation of the lobby camera to the player camera
-        transform.position = architectSpawnLocation;
-        transform.rotation = Quaternion.Euler(architectSpawnRotation);
+            // copy position and rotation of the lobby camera to the player camera
+            transform.position = architectSpawnLocation;
+            transform.rotation = Quaternion.Euler(architectSpawnRotation);
+        }
     }
 
     // // need to add the [ServerRPC] attribute

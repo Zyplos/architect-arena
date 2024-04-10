@@ -1,21 +1,39 @@
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class FaceHighlighter : MonoBehaviour
+public class FaceHighlighter : NetworkBehaviour
 {
     private BoxCollider boxCollider;
 
+    // map of directions to boolean values
+    private Dictionary<string, bool> facePlaced = new Dictionary<string, bool>
+    {
+        { "x+", false },
+        { "x-", false },
+        { "y+", true }, // disable top and bottom for now
+        { "y-", true }, // disable top and bottom for now
+        { "z+", false },
+        { "z-", false }
+    };
+
     public int delta = 40;
+
+    private bool isArchitect = false;
 
     void Start()
     {
         // Assuming the BoxCollider is attached to the same GameObject as this script
         boxCollider = GetComponent<BoxCollider>();
+
+        isArchitect = OwnerClientId == 0;
     }
 
     void Update()
     {
-        // dont do anything if Camera.main is null
-        if (Camera.main == null) return;
+        if (!isArchitect) return; // Only the architect can place blocks
+        if (!Camera.main) return; // If there is no camera, don't do anything (happens when game's launched)
 
         // Cast a ray from the mouse position
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -24,6 +42,10 @@ public class FaceHighlighter : MonoBehaviour
         if (boxCollider.Raycast(ray, out hit, Mathf.Infinity))
         {
             string direction = CalculateDirection(hit);
+
+            // dont do anything at all for faces that have already have a block placed
+            if (facePlaced[direction]) return;
+
             // Debug.Log("Hovering over face: " + direction);
 
             // grab child object called "highlight-${direction}"
@@ -76,7 +98,10 @@ public class FaceHighlighter : MonoBehaviour
             {
                 // eventually we'll have a lot of block types, this'll be better than having a lot of class variables
                 // https://docs.unity3d.com/ScriptReference/Resources.html
-                GameObject block = Instantiate(Resources.Load("LevelBlocks/TrapRoomResource"), position, Quaternion.identity) as GameObject;
+                Debug.Log("UPDATE | GOT CLICK " + direction);
+                SpawnBlockServerRpc(position);
+                facePlaced[direction] = true;
+                Debug.Log("UPDATE | SPAWNED BLOCK?");
             }
         }
         else
@@ -124,5 +149,28 @@ public class FaceHighlighter : MonoBehaviour
             else
                 return "z-";
         }
+    }
+
+    [ServerRpc]
+    private void SpawnBlockServerRpc(Vector3 position)
+    {
+        Debug.Log("SERVERRPC | CALLING CLIENTRPC TO SPAWN LEVEL BLOCK");
+        SpawnBlockClientRpc("LevelBlocks/TrapRoomResource", position);
+    }
+
+    [ClientRpc]
+    private void SpawnBlockClientRpc(string type, Vector3 position)
+    {
+        Debug.Log("CLIENTRPC | TRYING TO SPAWN LEVEL BLOCK");
+        // Instantiate the block on the client side
+        GameObject newBlock = Instantiate(Resources.Load(type), position, Quaternion.identity) as GameObject;
+
+        newBlock.GetComponent<NetworkObject>().Spawn(true);
+
+        Debug.Log("CLIENTRPC | SPAWNED LEVEL BLOCK");
+        // Add any additional logic or modifications to the newBlock here
+        // ...
+        // Optionally, you can also synchronize the block's network object
+        // newBlock.GetComponent<NetworkObject>().Spawn(true);
     }
 }
