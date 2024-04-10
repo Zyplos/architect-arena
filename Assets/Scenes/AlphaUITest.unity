@@ -2966,6 +2966,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763648795}
   m_CullTransparentMesh: 1
+--- !u!1 &1770925058 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1514717876392207640, guid: af9ad16acca9e0c4c8250f56c277e132, type: 3}
+  m_PrefabInstance: {fileID: 1670419620513269442}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1799629805
 GameObject:
   m_ObjectHideFlags: 0
@@ -3034,6 +3039,7 @@ MonoBehaviour:
   upcomingRoomList: {fileID: 1531753228}
   statusText: {fileID: 354917243}
   isBuilding: 0
+  lobbyBarrier: {fileID: 1770925058}
 --- !u!1 &1979367504
 GameObject:
   m_ObjectHideFlags: 0

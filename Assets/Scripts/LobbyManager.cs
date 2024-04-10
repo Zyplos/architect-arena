@@ -25,6 +25,8 @@ public class LobbyManager : NetworkBehaviour
 
     public bool isBuilding = false;
 
+    public GameObject lobbyBarrier;
+
 
     // Start is called before the first frame update
     void Start()
@@ -93,6 +95,9 @@ public class LobbyManager : NetworkBehaviour
         if (!isBuilding)
         {
             upcomingRoomList.text = "";
+
+            // disable the lobby barrier
+            lobbyBarrier.SetActive(false);
         }
 
         if (isArchitect)
