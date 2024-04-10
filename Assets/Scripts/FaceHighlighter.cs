@@ -14,6 +14,9 @@ public class FaceHighlighter : MonoBehaviour
 
     void Update()
     {
+        // dont do anything if Camera.main is null
+        if (Camera.main == null) return;
+
         // Cast a ray from the mouse position
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
