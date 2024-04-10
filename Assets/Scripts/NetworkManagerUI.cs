@@ -23,6 +23,10 @@ public class NetworkManagerUI : MonoBehaviour
     public string joinCode;
 
     [SerializeField] private TMP_InputField joinCodeInputField;
+
+    // group of UI elements
+    [SerializeField] private GameObject startMenuStuff;
+
     // after all objectes are created and initialized
     // Awake() method is called and executed
     // Awake is always called before any Start functions.
@@ -82,7 +86,10 @@ public class NetworkManagerUI : MonoBehaviour
         NetworkManager.Singleton.StartHost();
 
         // display the join code
-        joinCodeText.text = joinCode;
+        joinCodeText.text = "Lobby Code:\n" + joinCode;
+
+        // hide start menu
+        startMenuStuff.SetActive(false);
     }
 
     // start client relay
@@ -95,6 +102,7 @@ public class NetworkManagerUI : MonoBehaviour
             // join the allocation
             joinAllocation = await RelayService.Instance.JoinAllocationAsync(joinCode);
 
+            joinCode = await RelayService.Instance.GetJoinCodeAsync(joinAllocation.AllocationId);
         }
         catch (RelayServiceException e)
         {
@@ -107,6 +115,10 @@ public class NetworkManagerUI : MonoBehaviour
 
         //Start the client
         NetworkManager.Singleton.StartClient();
+
+        joinCodeText.text = "Lobby Code:\n" + joinCodeInputField.text.ToUpper();
+
+        startMenuStuff.SetActive(false);
     }
 
 }
