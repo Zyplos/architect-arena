@@ -210,7 +210,7 @@ public class FaceHighlighter : NetworkBehaviour
     private void SpawnBlockServerRpc(Vector3 position)
     {
         Debug.Log("SERVERRPC | CALLING CLIENTRPC TO SPAWN LEVEL BLOCK");
-        SpawnBlockClientRpc("LevelBlocks/TrapRoomResource", position);
+        SpawnBlockClientRpc("LevelBlocks/" + lobbyManager.getUpcomingRoomKey(), position);
     }
 
     [ClientRpc]

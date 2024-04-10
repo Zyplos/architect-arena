@@ -38,7 +38,6 @@ public class NetworkedChallengerMovement : NetworkBehaviour
     public Vector3 architectSpawnLocation;
     public Vector3 architectSpawnRotation;
 
-    private bool isArchitect = false;
 
 
     // Start is called before the first frame update
@@ -46,11 +45,14 @@ public class NetworkedChallengerMovement : NetworkBehaviour
     {
         playerCamera = Camera.main;
 
+        Debug.Log("MOVEMENT START | ISOWNER: " + IsOwner + " | OWNERID: " + OwnerClientId);
 
+        if (!IsOwner) return;
 
         // everyone but the architect should have their cursor locked
-        if (!isArchitect)
+        if (OwnerClientId != 0)
         {
+            Debug.Log("CAMERA | LOCKING CURSOR " + OwnerClientId);
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -89,7 +91,7 @@ public class NetworkedChallengerMovement : NetworkBehaviour
 
 
         // dont continue if the player is the architect
-        if (isArchitect) return;
+        if (OwnerClientId == 0) return;
 
         // rotate camera controls only for challengers
         if (playerCamera != null)
@@ -99,13 +101,19 @@ public class NetworkedChallengerMovement : NetworkBehaviour
             playerCamera.transform.localRotation = Quaternion.Euler(rotationX, 0, 0);
             transform.rotation *= Quaternion.Euler(0, Input.GetAxis("Mouse X") * lookSpeed, 0);
         }
+
+        // teleport player back to 0,0,0 if they fall off the map
+        if (transform.position.y < -10)
+        {
+            transform.position = new Vector3(0, 5, 0);
+        }
     }
 
     // this method is called when the object is spawned
     // we will change the color of the objects
     public override void OnNetworkSpawn()
     {
-        isArchitect = OwnerClientId == 0;
+        // isArchitect = OwnerClientId == 0;
 
         Debug.Log("SPAWNING PLAYER | " + OwnerClientId);
         GetComponent<MeshRenderer>().material.color = colors[(int)OwnerClientId];

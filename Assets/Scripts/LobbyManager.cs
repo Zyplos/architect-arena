@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
 using System.Linq;
+using System;
 
 public class LobbyManager : NetworkBehaviour
 {
     // array of strings with available rooms
-    private string[] rooms = { "TrapRoomResource", "StairwellRoomResource", "AlternatingPlatformRoomResource" };
+    // private string[] rooms = { "TrapRoomResource", "StairwellRoomResource", "AlternatingPlatformRoomResource" };
+    private string[] rooms = { "TrapRoomResource" };
 
     private Dictionary<string, string> friendlyRoomNames = new Dictionary<string, string>
     {
@@ -27,6 +29,8 @@ public class LobbyManager : NetworkBehaviour
 
     public GameObject lobbyBarrier;
 
+    public bool gameOver = false;
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +45,13 @@ public class LobbyManager : NetworkBehaviour
             GenerateRandomRoomOrder();
         }
 
+        // in 3 minutes, set gameOver to true
+        Invoke("EndGame", 180);
+    }
+
+    private void EndGame()
+    {
+        gameOver = true;
     }
 
     private void GenerateRandomRoomOrder()
@@ -48,9 +59,9 @@ public class LobbyManager : NetworkBehaviour
         // add trap room first
         upcomingRooms.Add("TrapRoomResource");
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 5; i++)
         {
-            int randomIndex = Random.Range(0, rooms.Length);
+            int randomIndex = UnityEngine.Random.Range(0, rooms.Length);
             upcomingRooms.Add(rooms[randomIndex]);
         }
 
@@ -78,6 +89,19 @@ public class LobbyManager : NetworkBehaviour
         }
     }
 
+    public string getUpcomingRoomKey()
+    {
+        if (upcomingRooms.Count > 0)
+        {
+            return upcomingRooms.First();
+        }
+        else
+        {
+            return "";
+        }
+
+    }
+
     public void removeFirstRoom()
     {
         upcomingRooms.RemoveAt(0);
@@ -91,14 +115,6 @@ public class LobbyManager : NetworkBehaviour
         if (!NetworkManager.IsConnectedClient) return;
 
         isBuilding = upcomingRooms.Count > 0;
-
-        if (!isBuilding)
-        {
-            upcomingRoomList.text = "";
-
-            // disable the lobby barrier
-            lobbyBarrier.SetActive(false);
-        }
 
         if (isArchitect)
         {
@@ -115,6 +131,7 @@ public class LobbyManager : NetworkBehaviour
             else
             {
                 statusText.text = "Stop them!";
+
             }
         }
 
@@ -125,11 +142,54 @@ public class LobbyManager : NetworkBehaviour
             if (isBuilding)
             {
                 statusText.text = "Building level...";
+                SetStatusTextServerRpc("Building level...");
             }
             else
             {
                 statusText.text = "Get to the end!";
+                SetStatusTextServerRpc("Get to the end!");
             }
         }
+
+        if (!isBuilding)
+        {
+            upcomingRoomList.text = "";
+
+            // disable the lobby barrier
+            DisableLobbyBarrierServerRpc();
+        }
+
+        if (gameOver)
+        {
+            statusText.text = "Game Over!";
+            SetStatusTextServerRpc("Game Over!");
+        }
+    }
+
+    // server rpc call that disables the lobby barrier
+    [ServerRpc]
+    public void DisableLobbyBarrierServerRpc()
+    {
+        DisableLobbyBarrierClientRpc();
+    }
+
+    // client rpc call that disables the lobby barrier
+    [ClientRpc]
+    public void DisableLobbyBarrierClientRpc()
+    {
+        lobbyBarrier.SetActive(false);
+    }
+
+    [ServerRpc]
+    public void SetStatusTextServerRpc(String text)
+    {
+        DisableLobbyBarrierClientRpc();
+    }
+
+    // client rpc call that disables the lobby barrier
+    [ClientRpc]
+    public void SetStatusTextClientRpc(String text)
+    {
+        statusText.text = text;
     }
 }
