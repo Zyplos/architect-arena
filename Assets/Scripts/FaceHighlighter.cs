@@ -1,21 +1,80 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
-public class FaceHighlighter : MonoBehaviour
+public class FaceHighlighter : NetworkBehaviour
 {
     private BoxCollider boxCollider;
 
+    // map of directions to boolean values
+    private Dictionary<string, bool> facePlaced = new Dictionary<string, bool>
+    {
+        { "x+", false },
+        { "x-", false },
+        { "y+", true }, // disable top and bottom for now
+        { "y-", true }, // disable top and bottom for now
+        { "z+", false },
+        { "z-", false }
+    };
+
     public int delta = 40;
+
+    private bool isArchitect = false;
+
+    private bool buildingMode = true;
+
+    public GameObject LevelWalls;
+
+    private TMPro.TMP_Text hintText;
+
+    // array of strings with available rooms
+    private string[] rooms = { "TrapRoomResource", "StairwellRoomResource", "AlternatingPlatformRoomResource" };
+
+    private Dictionary<string, string> friendlyRoomNames = new Dictionary<string, string>
+    {
+        { "TrapRoomResource", "Lava Room" },
+        { "StairwellRoomResource", "Stairwell Climb" },
+        { "AlternatingPlatformRoomResource", "Shaky Hallway" }
+    };
+
+    private string[] upcomingRooms;
 
     void Start()
     {
         // Assuming the BoxCollider is attached to the same GameObject as this script
         boxCollider = GetComponent<BoxCollider>();
+
+        // get the hint text object from Canvas
+        hintText = GameObject.Find("Canvas").transform.Find("LevelBlockHintText").GetComponent<TMPro.TMP_Text>();
+
+        isArchitect = OwnerClientId == 0;
+
+        GenerateRandomRoomOrder();
+    }
+
+    private void GenerateRandomRoomOrder()
+    {
+        // randomly add 10 rooms to the upcomingRooms array
+        upcomingRooms = new string[10];
+
+        for (int i = 0; i < 10; i++)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, rooms.Length);
+            upcomingRooms[i] = rooms[randomIndex];
+        }
     }
 
     void Update()
     {
-        // dont do anything if Camera.main is null
-        if (Camera.main == null) return;
+        if (!isArchitect) return; // Only the architect can place blocks
+        if (!Camera.main) return; // If there is no camera, don't do anything (happens when game's launched)
+
+        if (buildingMode && LevelWalls)
+        {
+            LevelWalls.GetComponent<Renderer>().material.color = new Color(0, 0, 0, 0.2f);
+        }
 
         // Cast a ray from the mouse position
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -23,7 +82,13 @@ public class FaceHighlighter : MonoBehaviour
 
         if (boxCollider.Raycast(ray, out hit, Mathf.Infinity))
         {
+
             string direction = CalculateDirection(hit);
+
+            // dont do anything at all for faces that have already have a block placed
+            if (facePlaced[direction]) return;
+
+            DrawHintText(hit);
             // Debug.Log("Hovering over face: " + direction);
 
             // grab child object called "highlight-${direction}"
@@ -76,7 +141,10 @@ public class FaceHighlighter : MonoBehaviour
             {
                 // eventually we'll have a lot of block types, this'll be better than having a lot of class variables
                 // https://docs.unity3d.com/ScriptReference/Resources.html
-                GameObject block = Instantiate(Resources.Load("LevelBlocks/TrapRoomResource"), position, Quaternion.identity) as GameObject;
+                Debug.Log("UPDATE | GOT CLICK " + direction);
+                SpawnBlockServerRpc(position);
+                facePlaced[direction] = true;
+                Debug.Log("UPDATE | SPAWNED BLOCK?");
             }
         }
         else
@@ -91,7 +159,21 @@ public class FaceHighlighter : MonoBehaviour
                     child.GetComponent<Renderer>().material.color = otherColor;
                 }
             }
+
+            // hide hint text
+            hintText.text = "";
         }
+    }
+
+    private void DrawHintText(RaycastHit hit)
+    {
+        // get screen position of hit point
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(hit.point);
+
+        // set hint text position to screen position
+        hintText.rectTransform.position = screenPos;
+
+        hintText.text = "Placing next:\nTrap Room";
     }
 
     string CalculateDirection(RaycastHit hit)
@@ -124,5 +206,28 @@ public class FaceHighlighter : MonoBehaviour
             else
                 return "z-";
         }
+    }
+
+    [ServerRpc]
+    private void SpawnBlockServerRpc(Vector3 position)
+    {
+        Debug.Log("SERVERRPC | CALLING CLIENTRPC TO SPAWN LEVEL BLOCK");
+        SpawnBlockClientRpc("LevelBlocks/TrapRoomResource", position);
+    }
+
+    [ClientRpc]
+    private void SpawnBlockClientRpc(string type, Vector3 position)
+    {
+        Debug.Log("CLIENTRPC | TRYING TO SPAWN LEVEL BLOCK");
+        // Instantiate the block on the client side
+        GameObject newBlock = Instantiate(Resources.Load(type), position, Quaternion.identity) as GameObject;
+
+        newBlock.GetComponent<NetworkObject>().Spawn(true);
+
+        Debug.Log("CLIENTRPC | SPAWNED LEVEL BLOCK");
+        // Add any additional logic or modifications to the newBlock here
+        // ...
+        // Optionally, you can also synchronize the block's network object
+        // newBlock.GetComponent<NetworkObject>().Spawn(true);
     }
 }
