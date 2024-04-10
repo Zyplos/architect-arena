@@ -1,4 +1,4 @@
-Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+Library: C:\Users\filip\Documents\Unity Projects\architect-arena\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --platform=Windows
 --backend=burst-llvm-15
 --target=AVX2
@@ -21,8 +21,8 @@ Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugin
 --assembly-defines=Unity.Services.Core.Scheduler;
 --assembly-defines=Unity.Services.Core.Environments;
 --assembly-defines=Unity.Services.Relay;
---assembly-defines=Unity.Multiplayer.Tools.NetStats;
 --assembly-defines=Unity.Services.Core.Configuration;
+--assembly-defines=Unity.Multiplayer.Tools.NetStats;
 --assembly-defines=Unity.Collections;
 --assembly-defines=Unity.Netcode.Runtime;
 --assembly-defines=Unity.Multiplayer.Samples.Utilities.RNSM;
@@ -30,8 +30,8 @@ Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugin
 --assembly-defines=Unity.TextMeshPro;
 --assembly-defines=Unity.Multiplayer.Samples.Utilities;
 --assembly-defines=Unity.Services.Core.Analytics;
---assembly-defines=Unity.Profiling.Core;
 --assembly-defines=Unity.Multiplayer.Tools.Common;
+--assembly-defines=Unity.Profiling.Core;
 --assembly-defines=Unity.Burst;
 --assembly-defines=Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 --assembly-defines=Unity.Services.Core.Internal;
@@ -55,9 +55,9 @@ Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugin
 --assembly-defines=Unity.Multiplayer.Tools.NetStatsReporting;
 --assembly-defines=Unity.Multiplayer.Tools.MetricEvents;
 --assembly-defines=Unity.Multiplayer.Tools.NetStatsMonitor.Component;
+--assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=Unity.VisualScripting.Antlr3.Runtime;
 --assembly-defines=Unity.Burst.Unsafe;
---assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=Newtonsoft.Json;
 --assembly-defines=System.Runtime;
 --assembly-defines=netstandard;
@@ -83,10 +83,10 @@ Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugin
 --assembly-defines=mscorlib;
 --linker-options=PdbAltPath="architect-arena_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\devspace\academic\cs426\architect-arena\Temp\Burst
+--temp-folder=C:\Users\filip\Documents\Unity Projects\architect-arena\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.15f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\devspace\academic\cs426\architect-arena\Library\Burst
---output=C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\filip\Documents\Unity Projects\architect-arena\Library\Burst
+--output=C:\Users\filip\Documents\Unity Projects\architect-arena\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
@@ -192,8 +192,8 @@ Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugin
 --assembly-defines=Unity.Services.Core.Scheduler;
 --assembly-defines=Unity.Services.Core.Environments;
 --assembly-defines=Unity.Services.Relay;
---assembly-defines=Unity.Multiplayer.Tools.NetStats;
 --assembly-defines=Unity.Services.Core.Configuration;
+--assembly-defines=Unity.Multiplayer.Tools.NetStats;
 --assembly-defines=Unity.Collections;
 --assembly-defines=Unity.Netcode.Runtime;
 --assembly-defines=Unity.Multiplayer.Samples.Utilities.RNSM;
@@ -201,8 +201,8 @@ Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugin
 --assembly-defines=Unity.TextMeshPro;
 --assembly-defines=Unity.Multiplayer.Samples.Utilities;
 --assembly-defines=Unity.Services.Core.Analytics;
---assembly-defines=Unity.Profiling.Core;
 --assembly-defines=Unity.Multiplayer.Tools.Common;
+--assembly-defines=Unity.Profiling.Core;
 --assembly-defines=Unity.Burst;
 --assembly-defines=Unity.Multiplayer.Samples.Utilities.ClientAuthority;
 --assembly-defines=Unity.Services.Core.Internal;
@@ -226,9 +226,9 @@ Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugin
 --assembly-defines=Unity.Multiplayer.Tools.NetStatsReporting;
 --assembly-defines=Unity.Multiplayer.Tools.MetricEvents;
 --assembly-defines=Unity.Multiplayer.Tools.NetStatsMonitor.Component;
+--assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=Unity.VisualScripting.Antlr3.Runtime;
 --assembly-defines=Unity.Burst.Unsafe;
---assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=Newtonsoft.Json;
 --assembly-defines=System.Runtime;
 --assembly-defines=netstandard;
@@ -254,10 +254,10 @@ Library: C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugin
 --assembly-defines=mscorlib;
 --linker-options=PdbAltPath="architect-arena_Data/Plugins/x86_64/lib_burst_generated.pdb"
 --generate-link-xml=Temp\burst.link.xml
---temp-folder=C:\devspace\academic\cs426\architect-arena\Temp\Burst
+--temp-folder=C:\Users\filip\Documents\Unity Projects\architect-arena\Temp\Burst
 --key-folder=C:/Program Files/Unity/Hub/Editor/2022.3.15f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport
---decode-folder=C:\devspace\academic\cs426\architect-arena\Library\Burst
---output=C:\devspace\academic\cs426\architect-arena\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
+--decode-folder=C:\Users\filip\Documents\Unity Projects\architect-arena\Library\Burst
+--output=C:\Users\filip\Documents\Unity Projects\architect-arena\Temp\BurstOutput\Data\Plugins\x86_64\lib_burst_generated
 --pdb-search-paths=Temp/ManagedSymbols/
 
 --method=Unity.Burst.BurstCompiler+BurstCompilerHelper, Unity.Burst, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null::IsBurstEnabled()--8c2be93e18276203cbd918daa2748a10
