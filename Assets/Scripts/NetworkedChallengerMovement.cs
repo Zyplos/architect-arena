@@ -43,11 +43,10 @@ public class NetworkedChallengerMovement : NetworkBehaviour
     void Start()
     {
         playerCamera = Camera.main;
-        playerCamera.transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
-        playerCamera.transform.SetParent(transform);
 
         // do this for all players except the architect
-        if (OwnerClientId != 0) {
+        if (OwnerClientId != 0)
+        {
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
@@ -72,7 +71,7 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         float curSpeedY = canMove ? (isRunning ? runningSpeed : walkingSpeed) * Input.GetAxis("Horizontal") : 0;
         float movementDirectionY = 0f;
         moveDirection = (forward * curSpeedX) + (right * curSpeedY);
- 
+
         if (Input.GetButton("Jump") && canMove)
         {
             moveDirection.y = jumpSpeed;
@@ -118,6 +117,8 @@ public class NetworkedChallengerMovement : NetworkBehaviour
 
         // tag playerCamera with "MainCamera"
         playerCamera.tag = "MainCamera";
+        // change object name to "Player Camera"
+        playerCamera.name = "[" + OwnerClientId + "] Player's Camera";
 
         // disable "Lobby Camera" in scene
         GameObject.Find("Lobby Camera").SetActive(false);
