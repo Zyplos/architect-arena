@@ -8,12 +8,15 @@ using Unity.Services.Relay;
 using Unity.Services.Relay.Models;
 using Unity.Networking.Transport.Relay;
 using Unity.Netcode.Transports.UTP;
+using UnityEngine.SceneManagement;
+
 public class NetworkManagerUI : MonoBehaviour
 {
     // [SerializeField] attribute is used to make the private variables accessible
     // within the Unity editor without making them public
     [SerializeField] private Button host_btn;
     [SerializeField] private Button client_btn;
+    [SerializeField] private Button credits_btn;
 
     //text to display the join code
     [SerializeField] private TMP_Text joinCodeText;
@@ -21,6 +24,7 @@ public class NetworkManagerUI : MonoBehaviour
     [SerializeField] private int maxPlayers = 4;
     // join code
     public string joinCode;
+    public string creditsScene;
 
     [SerializeField] private TMP_InputField joinCodeInputField;
 
@@ -48,6 +52,10 @@ public class NetworkManagerUI : MonoBehaviour
             // NetworkManager.Singleton.StartClient();
             StartClientRelay(joinCodeInputField.text);
         });
+        credits_btn.onClick.AddListener(() =>
+        {
+            StartCreditsScene();
+        });
     }
 
     private async void Start()
@@ -57,6 +65,10 @@ public class NetworkManagerUI : MonoBehaviour
 
         //sign in anonymously
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
+    }
+     public void StartCreditsScene()
+    {
+        SceneManager.LoadScene(creditsScene);
     }
 
     // Start host relay

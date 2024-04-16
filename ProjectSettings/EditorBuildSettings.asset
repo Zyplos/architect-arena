@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AlphaUITest.unity
     guid: 453fe8bf39e86e441b62cbe650ca0650
+  - enabled: 1
+    path: Assets/Scenes/CreditScene.unity
+    guid: 772f16975482e65489345ad29f0763f5
   m_configObjects: {}
