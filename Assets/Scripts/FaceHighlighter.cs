@@ -27,7 +27,6 @@ public class FaceHighlighter : NetworkBehaviour
 
     public GameObject LevelWalls;
 
-    // private TMPro.TMP_Text hintText;
 
     public LobbyManager lobbyManager;
 
@@ -53,9 +52,6 @@ public class FaceHighlighter : NetworkBehaviour
 
         lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
 
-        // get the hint text object from Canvas
-        // hintText = GameObject.Find("Canvas").transform.Find("LevelBlockHintText").GetComponent<TMPro.TMP_Text>();
-
         isArchitect = OwnerClientId == 0;
     }
 
@@ -73,8 +69,6 @@ public class FaceHighlighter : NetworkBehaviour
 
         if (!buildingMode)
         {
-            // hintText.text = "";
-
             foreach (Transform child in transform)
             {
                 if (child.name.StartsWith("highlight-"))
@@ -112,7 +106,6 @@ public class FaceHighlighter : NetworkBehaviour
                 return;
             };
 
-            // DrawHintText(hit);
             // Debug.Log("Hovering over face: " + direction);
 
             // grab child object called "highlight-${direction}"
@@ -177,20 +170,8 @@ public class FaceHighlighter : NetworkBehaviour
 
             clearHighlights();
             // hide hint text
-            // hintText.text = "";
         }
     }
-
-    // private void DrawHintText(RaycastHit hit)
-    // {
-    //     // get screen position of hit point
-    //     Vector3 screenPos = Camera.main.WorldToScreenPoint(hit.point);
-
-    //     // set hint text position to screen position
-    //     hintText.rectTransform.position = screenPos;
-
-    //     hintText.text = "Placing next:\n" + lobbyManager.getUpcomingFriendlyRoomName();
-    // }
 
     void clearHighlights()
     {
@@ -209,7 +190,7 @@ public class FaceHighlighter : NetworkBehaviour
     string CalculateDirection(RaycastHit hit)
     {
         // Calculate hit point in local space of the box collider
-        Vector3 hitLocalPoint = transform.InverseTransformPoint(hit.point);
+        // Vector3 hitLocalPoint = transform.InverseTransformPoint(hit.point);
 
         // Get the normal of the face that was hit
         Vector3 faceNormal = hit.normal.normalized;
