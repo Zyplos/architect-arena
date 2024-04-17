@@ -21,4 +21,16 @@ public class PlatformMover : MonoBehaviour
         // Update the platform's position
         transform.position = new Vector3(transform.position.x, newY, transform.position.z);
     }
+
+    public void enableTrap()
+    {
+        speed = 10f;
+        height = 5f;
+    }
+
+    public void disableTrap()
+    {
+        speed = 2f;
+        height = 1f;
+    }
 }

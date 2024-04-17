@@ -8,13 +8,13 @@ using System;
 public class LobbyManager : NetworkBehaviour
 {
     // array of strings with available rooms
-    // private string[] rooms = { "TrapRoomResource", "StairwellRoomResource", "AlternatingPlatformRoomResource" };
-    private string[] rooms = { "TrapRoomResource", "LavaHallwayResource" };
+    private string[] rooms = { "TrapRoomResource", "LavaHallwayResource", "StairwellClimbResource" };
+    // private string[] rooms = { "TrapRoomResource" };
 
     private Dictionary<string, string> friendlyRoomNames = new Dictionary<string, string>
     {
         { "TrapRoomResource", "Lava Room" },
-        { "StairwellRoomResource", "Stairwell Climb" },
+        { "StairwellClimbResource", "Stairwell Climb" },
         { "LavaHallwayResource", "Shaky Hallway" },
         { "EndRoomResource", "[!] Finish Line"}
     };
@@ -23,7 +23,7 @@ public class LobbyManager : NetworkBehaviour
 
     public TMPro.TMP_Text upcomingRoomList;
     public TMPro.TMP_Text statusText;
-    private bool isArchitect = false;
+    // private bool isArchitect = false;
 
     public bool isBuilding = false;
 
@@ -35,11 +35,10 @@ public class LobbyManager : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        isArchitect = OwnerClientId == 0;
 
         upcomingRooms = new List<string>();
 
-        if (isArchitect)
+        if (OwnerClientId == 0)
         {
             Debug.Log("ARCHITECT | Generating random room order");
             GenerateRandomRoomOrder();
@@ -57,9 +56,12 @@ public class LobbyManager : NetworkBehaviour
     private void GenerateRandomRoomOrder()
     {
         // add trap room first
-        upcomingRooms.Add("LavaHallwayResource");
+        upcomingRooms.Add("TrapRoomResource");
 
-        for (int i = 0; i < 5; i++)
+        // random number between 10 and 20
+        // int numRooms = UnityEngine.Random.Range(10, 20);
+
+        for (int i = 0; i < 15; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, rooms.Length);
             upcomingRooms.Add(rooms[randomIndex]);
@@ -116,7 +118,7 @@ public class LobbyManager : NetworkBehaviour
 
         isBuilding = upcomingRooms.Count > 0;
 
-        if (isArchitect)
+        if (OwnerClientId == 0 && IsOwner)
         {
             upcomingRoomList.text = "Upcoming Rooms:\n";
             for (int i = 0; i < upcomingRooms.Count; i++)
@@ -135,7 +137,7 @@ public class LobbyManager : NetworkBehaviour
             }
         }
 
-        if (!isArchitect)
+        if (OwnerClientId != 0 && IsOwner)
         {
             upcomingRoomList.text = "Next Room: " + getUpcomingFriendlyRoomName();
 
