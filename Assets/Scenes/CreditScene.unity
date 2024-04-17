@@ -762,7 +762,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timer: 25
-  sceneName: AlphaUITest
+  sceneName: BetaTest
 --- !u!114 &1172373891
 MonoBehaviour:
   m_ObjectHideFlags: 0
