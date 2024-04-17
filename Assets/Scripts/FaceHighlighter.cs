@@ -21,12 +21,10 @@ public class FaceHighlighter : NetworkBehaviour
 
     public int delta = 40;
 
-    private bool isArchitect = false;
 
     private bool buildingMode = true;
 
     public GameObject LevelWalls;
-
 
     public LobbyManager lobbyManager;
 
@@ -51,13 +49,22 @@ public class FaceHighlighter : NetworkBehaviour
         gameObject.name = generateRandomString();
 
         lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
-
-        isArchitect = OwnerClientId == 0;
     }
 
     void Update()
     {
-        if (!isArchitect) return; // Only the architect can place blocks
+        // Only the architect can place blocks
+        if (!IsOwner) return;
+
+        if (OwnerClientId != 0)
+        {
+            Debug.Log("FACE HIGHLIGHTER | NOT ARCHITECT, SKIPPING | " + OwnerClientId + " | OWNER? " + IsOwner);
+            return;
+        }
+        else
+        {
+            Debug.Log("FACE HIGHLIGHTER | ARCHITECT | " + OwnerClientId);
+        }
         if (!Camera.main) return; // If there is no camera, don't do anything (happens when game's launched)
 
         buildingMode = lobbyManager.isBuilding;

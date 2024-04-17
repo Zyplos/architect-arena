@@ -272,6 +272,7 @@ GameObject:
   - component: {fileID: 3536773104552711864}
   - component: {fileID: 7690092905342121787}
   - component: {fileID: 8107895898542534690}
+  - component: {fileID: 2086103672637058406}
   m_Layer: 0
   m_Name: StairwellClimbResource
   m_TagString: Untagged
@@ -336,7 +337,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 458886640
+  GlobalObjectIdHash: 4079796477
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -359,6 +360,18 @@ MonoBehaviour:
   delta: 40
   LevelWalls: {fileID: 6380466255009044441}
   lobbyManager: {fileID: 0}
+--- !u!114 &2086103672637058406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4092037335758997789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41905a2e73e9db7479e5d453332dadae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5313972076043526073
 GameObject:
   m_ObjectHideFlags: 0
