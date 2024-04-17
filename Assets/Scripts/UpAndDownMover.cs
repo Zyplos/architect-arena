@@ -1,9 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.Netcode;
 
-public class PlatformMover : NetworkBehaviour
+public class PlatformMover : MonoBehaviour
 {
     public float speed = 2.0f;     // Speed of the movement
     public float height = 1.0f;    // Height of the sine wave
