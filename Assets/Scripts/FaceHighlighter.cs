@@ -27,20 +27,34 @@ public class FaceHighlighter : NetworkBehaviour
 
     public GameObject LevelWalls;
 
-    private TMPro.TMP_Text hintText;
+    // private TMPro.TMP_Text hintText;
 
     public LobbyManager lobbyManager;
 
+    string generateRandomString()
+    {
+        string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        char[] stringChars = new char[5];
+        System.Random random = new System.Random();
+        for (int i = 0; i < stringChars.Length; i++)
+        {
+            stringChars[i] = chars[random.Next(chars.Length)];
+        }
+        return new string(stringChars);
+    }
 
     void Start()
     {
         // Assuming the BoxCollider is attached to the same GameObject as this script
         boxCollider = GetComponent<BoxCollider>();
 
+        // rename to a random string
+        gameObject.name = generateRandomString();
+
         lobbyManager = GameObject.Find("LobbyManager").GetComponent<LobbyManager>();
 
         // get the hint text object from Canvas
-        hintText = GameObject.Find("Canvas").transform.Find("LevelBlockHintText").GetComponent<TMPro.TMP_Text>();
+        // hintText = GameObject.Find("Canvas").transform.Find("LevelBlockHintText").GetComponent<TMPro.TMP_Text>();
 
         isArchitect = OwnerClientId == 0;
     }
@@ -59,7 +73,7 @@ public class FaceHighlighter : NetworkBehaviour
 
         if (!buildingMode)
         {
-            hintText.text = "";
+            // hintText.text = "";
 
             foreach (Transform child in transform)
             {
@@ -77,15 +91,28 @@ public class FaceHighlighter : NetworkBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
-        if (boxCollider.Raycast(ray, out hit, Mathf.Infinity))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
+            // Only do something if the ray hits this object's collider
+            if (hit.collider != boxCollider)
+            {
+                Debug.Log(gameObject.name + " | RAYCAST | NOT HITTING BOX COLLIDER | HITTING " + hit.collider.name);
+                clearHighlights();
+                return;
+            }
+
 
             string direction = CalculateDirection(hit);
+            Debug.Log(gameObject.name + " | RAYCAST | HITTING BOX COLLIDER " + direction);
 
             // dont do anything at all for faces that have already have a block placed
-            if (facePlaced[direction]) return;
+            if (facePlaced[direction])
+            {
+                clearHighlights();
+                return;
+            };
 
-            DrawHintText(hit);
+            // DrawHintText(hit);
             // Debug.Log("Hovering over face: " + direction);
 
             // grab child object called "highlight-${direction}"
@@ -147,31 +174,36 @@ public class FaceHighlighter : NetworkBehaviour
         }
         else
         {
-            // mouse not over any face, set opacity to 0 for all objects with name "highlight-"
-            foreach (Transform child in transform)
-            {
-                if (child.name.StartsWith("highlight-"))
-                {
-                    Color otherColor = child.GetComponent<Renderer>().material.color;
-                    otherColor.a = 0;
-                    child.GetComponent<Renderer>().material.color = otherColor;
-                }
-            }
 
+            clearHighlights();
             // hide hint text
             // hintText.text = "";
         }
     }
 
-    private void DrawHintText(RaycastHit hit)
+    // private void DrawHintText(RaycastHit hit)
+    // {
+    //     // get screen position of hit point
+    //     Vector3 screenPos = Camera.main.WorldToScreenPoint(hit.point);
+
+    //     // set hint text position to screen position
+    //     hintText.rectTransform.position = screenPos;
+
+    //     hintText.text = "Placing next:\n" + lobbyManager.getUpcomingFriendlyRoomName();
+    // }
+
+    void clearHighlights()
     {
-        // get screen position of hit point
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(hit.point);
-
-        // set hint text position to screen position
-        hintText.rectTransform.position = screenPos;
-
-        hintText.text = "Placing next:\n" + lobbyManager.getUpcomingFriendlyRoomName();
+        // mouse not over any face, set opacity to 0 for all objects with name "highlight-"
+        foreach (Transform child in transform)
+        {
+            if (child.name.StartsWith("highlight-"))
+            {
+                Color otherColor = child.GetComponent<Renderer>().material.color;
+                otherColor.a = 0;
+                child.GetComponent<Renderer>().material.color = otherColor;
+            }
+        }
     }
 
     string CalculateDirection(RaycastHit hit)
@@ -179,32 +211,33 @@ public class FaceHighlighter : NetworkBehaviour
         // Calculate hit point in local space of the box collider
         Vector3 hitLocalPoint = transform.InverseTransformPoint(hit.point);
 
-        // Calculate the absolute value of hitLocalPoint to avoid negative values
-        Vector3 absHitLocalPoint = new Vector3(Mathf.Abs(hitLocalPoint.x), Mathf.Abs(hitLocalPoint.y), Mathf.Abs(hitLocalPoint.z));
+        // Get the normal of the face that was hit
+        Vector3 faceNormal = hit.normal.normalized;
 
-        // Determine which face is being hovered over
-        if (absHitLocalPoint.x > absHitLocalPoint.y && absHitLocalPoint.x > absHitLocalPoint.z)
+        // Determine which face is being hovered over based on the normal vector
+        if (Mathf.Abs(faceNormal.x) > Mathf.Abs(faceNormal.y) && Mathf.Abs(faceNormal.x) > Mathf.Abs(faceNormal.z))
         {
-            if (hitLocalPoint.x > 0)
+            if (faceNormal.x > 0)
                 return "x+";
             else
                 return "x-";
         }
-        else if (absHitLocalPoint.y > absHitLocalPoint.x && absHitLocalPoint.y > absHitLocalPoint.z)
+        else if (Mathf.Abs(faceNormal.y) > Mathf.Abs(faceNormal.x) && Mathf.Abs(faceNormal.y) > Mathf.Abs(faceNormal.z))
         {
-            if (hitLocalPoint.y > 0)
+            if (faceNormal.y > 0)
                 return "y+";
             else
                 return "y-";
         }
         else
         {
-            if (hitLocalPoint.z > 0)
+            if (faceNormal.z > 0)
                 return "z+";
             else
                 return "z-";
         }
     }
+
 
     [ServerRpc]
     private void SpawnBlockServerRpc(Vector3 position)

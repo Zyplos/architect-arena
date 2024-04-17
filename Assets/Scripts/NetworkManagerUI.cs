@@ -52,10 +52,10 @@ public class NetworkManagerUI : MonoBehaviour
             // NetworkManager.Singleton.StartClient();
             StartClientRelay(joinCodeInputField.text);
         });
-        credits_btn.onClick.AddListener(() =>
-        {
-            StartCreditsScene();
-        });
+        // credits_btn.onClick.AddListener(() =>
+        // {
+        //     StartCreditsScene();
+        // });
     }
 
     private async void Start()
@@ -66,7 +66,7 @@ public class NetworkManagerUI : MonoBehaviour
         //sign in anonymously
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
-     public void StartCreditsScene()
+    public void StartCreditsScene()
     {
         SceneManager.LoadScene(creditsScene);
     }
