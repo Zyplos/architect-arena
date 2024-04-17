@@ -9,13 +9,13 @@ public class LobbyManager : NetworkBehaviour
 {
     // array of strings with available rooms
     // private string[] rooms = { "TrapRoomResource", "StairwellRoomResource", "AlternatingPlatformRoomResource" };
-    private string[] rooms = { "TrapRoomResource" };
+    private string[] rooms = { "TrapRoomResource", "LavaHallwayResource" };
 
     private Dictionary<string, string> friendlyRoomNames = new Dictionary<string, string>
     {
         { "TrapRoomResource", "Lava Room" },
         { "StairwellRoomResource", "Stairwell Climb" },
-        { "AlternatingPlatformRoomResource", "Shaky Hallway" },
+        { "LavaHallwayResource", "Shaky Hallway" },
         { "EndRoomResource", "[!] Finish Line"}
     };
 
@@ -57,7 +57,7 @@ public class LobbyManager : NetworkBehaviour
     private void GenerateRandomRoomOrder()
     {
         // add trap room first
-        upcomingRooms.Add("TrapRoomResource");
+        upcomingRooms.Add("LavaHallwayResource");
 
         for (int i = 0; i < 5; i++)
         {
