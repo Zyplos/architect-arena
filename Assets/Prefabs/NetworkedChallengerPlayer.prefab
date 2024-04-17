@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 7908552210010139764}
   - component: {fileID: 2755480357084331420}
   - component: {fileID: 8550882143854378988}
+  - component: {fileID: 5488514707765705408}
   m_Layer: 0
   m_Name: NetworkedChallengerPlayer
   m_TagString: Untagged
@@ -193,6 +194,7 @@ MonoBehaviour:
   playerCamera: {fileID: 3763922632111916125}
   architectSpawnLocation: {x: 144.6, y: 118.5, z: -163.4}
   architectSpawnRotation: {x: 22.802, y: -40.389, z: 0}
+  architectController: {fileID: 0}
 --- !u!114 &7908552210010139764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +264,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6c0be61502bb534f922ebb746851216, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5488514707765705408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3232015172162355345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4eb4ccd0bfa8c214d9c319d724e2a639, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPosition: {x: 0, y: 0, z: 0}
+  horizontalMove: 0.5
+  verticalMove: 0.25
+  zoomSpeed: 1000
+  minDistance: 40
+  maxDistance: 900
 --- !u!1 &5557983388913026398
 GameObject:
   m_ObjectHideFlags: 0
@@ -327,7 +347,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 2000
   field of view: 60
   orthographic: 0
   orthographic size: 5

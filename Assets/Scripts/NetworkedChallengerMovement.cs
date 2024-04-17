@@ -38,6 +38,8 @@ public class NetworkedChallengerMovement : NetworkBehaviour
     public Vector3 architectSpawnLocation;
     public Vector3 architectSpawnRotation;
 
+    public ArchitectController architectController;
+
 
 
     // Start is called before the first frame update
@@ -56,6 +58,10 @@ public class NetworkedChallengerMovement : NetworkBehaviour
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
+        else if (OwnerClientId == 0)
+        {
+            architectController = GetComponent<ArchitectController>();
+        }
     }
     // Update is called once per frame
     void Update()
@@ -64,6 +70,13 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         // makes sure the script is only executed on the owners 
         // not on the other prefabs 
         if (!IsOwner) return;
+
+        // architect only controls
+        if (OwnerClientId == 0)
+        {
+            architectController.ManualUpdate();
+            return;
+        }
 
         bool isRunning = false;
 
@@ -88,10 +101,6 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         }
 
         transform.position += moveDirection * Time.deltaTime;
-
-
-        // dont continue if the player is the architect
-        if (OwnerClientId == 0) return;
 
         // rotate camera controls only for challengers
         if (playerCamera != null)
