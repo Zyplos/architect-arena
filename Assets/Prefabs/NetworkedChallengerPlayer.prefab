@@ -277,11 +277,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetPosition: {x: 0, y: 0, z: 0}
-  horizontalMove: 0.5
-  verticalMove: 0.25
+  horizontalMove: 5
+  verticalMove: 2
   zoomSpeed: 1000
   minDistance: 40
   maxDistance: 900
+  minVerticalAngle: 10
+  maxVerticalAngle: 70
 --- !u!1 &5557983388913026398
 GameObject:
   m_ObjectHideFlags: 0

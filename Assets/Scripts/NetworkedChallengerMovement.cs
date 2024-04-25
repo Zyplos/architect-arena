@@ -116,6 +116,18 @@ public class NetworkedChallengerMovement : NetworkBehaviour
         {
             transform.position = new Vector3(0, 5, 0);
         }
+
+
+
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        // teleport player back to 0,0,0 if they enter a collider with tag "KillVoid"
+        if (other.CompareTag("KillVoid"))
+        {
+            transform.position = new Vector3(0, 5, 0);
+        }
     }
 
     // this method is called when the object is spawned
