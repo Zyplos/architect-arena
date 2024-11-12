@@ -1,5 +1,7 @@
 # Architect Arena
 
+![Screenshot of both player perspectives](./screenshot.png)
+
 A Unity game where a team of players try to escape a level created by another player that oversees all.
 
 Originally made for the University of Illinois Chicago's CS426: Video Game Design class.
